@@ -47,6 +47,18 @@ def create():
     return jsonify(result)
 
 
+@app.route("/edit/<int:task_id>", methods=['PUT'])
+def edit(task_id):
+    description = request.form.get('description')
+    if not description:
+        return jsonify({'success': False, 'response': 'Description missing'}), 400
+    if db_helper.update_task_entry(task_id, description):
+        result = {'success': True, 'response': 'Task updated'}
+        return jsonify(result)
+    else:
+        return jsonify({'success': False, 'response': 'Task not found'}), 404
+
+
 @app.route("/fetch-max-id",methods=['GET'])
 def fetch_max_id():
     data = request.get_json()
